@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF hujjat yuklanmoqda</title>
+
+  <style>
+    :root {
+      --navy: #073763;
+      --blue: #0c8fdc;
+      --sky: #eaf7ff;
+      --cyan: #18b6d9;
+      --green: #19a974;
+      --red: #dc2f3f;
+      --gold: #d6a84f;
+      --text: #102033;
+      --muted: #65758a;
+      --line: #d8e7f4;
+      --panel: #ffffff;
+      --shadow: 0 24px 70px rgba(7, 55, 99, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(90deg, rgba(24, 182, 217, 0.12), transparent 34%, rgba(25, 169, 116, 0.1)),
+        linear-gradient(180deg, #f7fcff 0%, #eef8ff 48%, #f8fbff 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(120deg, rgba(7, 55, 99, 0.055) 1px, transparent 1px),
+        linear-gradient(30deg, rgba(7, 55, 99, 0.04) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.72), transparent 78%);
+    }
+
+    .topbar {
+      width: 100%;
+      min-height: 70px;
+      background: linear-gradient(90deg, var(--navy), #075b93);
+      color: #ffffff;
+      border-bottom: 4px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      width: min(100%, 980px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .seal {
+      width: 42px;
+      height: 42px;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.12);
+      flex: 0 0 auto;
+    }
+
+    .brand-title {
+      min-width: 0;
+    }
+
+    .brand-title strong,
+    .brand-title span {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-title strong {
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .brand-title span {
+      margin-top: 3px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 12px;
+    }
+
+    .official-link {
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 999px;
+      padding: 9px 13px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .page {
+      min-height: calc(100vh - 70px);
+      display: grid;
+      place-items: center;
+      padding: 42px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      width: min(100%, 620px);
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(216, 231, 244, 0.95);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .stripe {
+      height: 8px;
+      background: linear-gradient(90deg, var(--cyan) 0 33%, #ffffff 33% 39%, var(--red) 39% 43%, #ffffff 43% 49%, var(--green) 49% 100%);
+    }
+
+    .content {
+      padding: 34px;
+      text-align: center;
+    }
+
+    .doc {
+      width: 92px;
+      height: 112px;
+      margin: 0 auto 24px;
+      border: 1px solid #bfd7ed;
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, transparent 0 76%, #dcefff 76%),
+        linear-gradient(180deg, #ffffff, #eef8ff);
+      box-shadow: 0 18px 34px rgba(12, 143, 220, 0.2);
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .doc::before,
+    .doc::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: #c6dced;
+    }
+
+    .doc::before {
+      top: 32px;
+    }
+
+    .doc::after {
+      top: 42px;
+      right: 30px;
+    }
+
+    .doc span {
+      margin-top: 30px;
+      color: var(--navy);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 8px 12px;
+      border: 1px solid #cce5f8;
+      border-radius: 999px;
+      background: var(--sky);
+      color: #165b8b;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(25, 169, 116, 0.14);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 470px;
+      margin: 14px auto 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .status {
+      width: fit-content;
+      max-width: 100%;
+      margin: 24px auto 0;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f8fcff;
+      color: #31546f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 3px solid #cce9fc;
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      flex: 0 0 auto;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      min-height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #12a2ed, var(--blue));
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(12, 143, 220, 0.26);
+    }
+
+    .btn:focus-visible {
+      outline: 3px solid rgba(12, 143, 220, 0.25);
+      outline-offset: 3px;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      color: var(--navy);
+      border: 1px solid #bad9ee;
+    }
+
+    .btn.secondary:hover {
+      background: #f1f9ff;
+      box-shadow: none;
+    }
+
+    .notice {
+      margin-top: 24px;
+      padding: 14px 16px;
+      border: 1px solid #d9e8f4;
+      border-radius: 12px;
+      background: #fbfdff;
+      color: #536578;
+      font-size: 13px;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .notice strong {
+      color: var(--navy);
+    }
+
+    .check {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brand {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .official-link {
+        width: 100%;
+        text-align: center;
+      }
+
+      .page {
+        padding: 24px 14px;
+      }
+
+      .content {
+        padding: 28px 20px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .lead {
+        font-size: 15px;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <div class="seal" aria-hidden="true">UZ</div>
+        <div class="brand-title">
+          <strong>Elektron davlat xizmatlari</strong>
+          <span>Hujjatni yuklab olish sahifasi</span>
+        </div>
+      </div>
+
+      <a class="official-link" href="https://my.gov.uz" target="_blank" rel="noopener noreferrer">
+        Rasmiy portal: my.gov.uz
+      </a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="card" aria-labelledby="page-title">
+      <div class="stripe" aria-hidden="true"></div>
+
+      <div class="content">
+        <div class="doc" aria-hidden="true">
+          <span>PDF</span>
+        </div>
+
+        <div class="eyebrow">
+          <span class="dot" aria-hidden="true"></span>
+          Hujjat tayyor
+        </div>
+
+        <h1 id="page-title">PDF hujjat yuklanmoqda</h1>
+        <p class="lead">
+          Hujjat avtomatik yuklab olinadi. Agar yuklash boshlanmasa,
+          quyidagi tugma orqali faylni qo'lda yuklab oling.
+        </p>
+
+        <div class="status" id="status" role="status" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
+          <span>Yuklab olish tayyorlanmoqda...</span>
+        </div>
+
+        <div class="actions">
+          <a class="btn" id="downloadBtn" href="document.pdf" download>
+            <span aria-hidden="true">&darr;</span>
+            PDF-ni yuklab olish
+          </a>
+
+          <a class="btn secondary" href="https://my.gov.uz" target="_blank" rel="noopener noreferrer">
+            <span aria-hidden="true">&nearr;</span>
+            MyGovUz saytiga o'tish
+          </a>
+        </div>
+
+        <div class="notice">
+          <strong>Eslatma:</strong> rasmiy elektron davlat xizmatlaridan foydalanish
+          uchun faqat <strong>my.gov.uz</strong> manziliga o'ting. Ushbu sahifa
+          PDF hujjatni yuklab olish va rasmiy portalga tez o'tish uchun yaratilgan.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function startDownload() {
+      const fileUrl = "document.pdf";
+      const fileName = "document.pdf";
+      const status = document.getElementById("status");
+      const link = document.createElement("a");
+
+      link.href = fileUrl;
+      link.download = fileName;
+      link.style.display = "none";
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.setTimeout(function () {
+        status.innerHTML = "<span class=\"check\">&#10003;</span><span>Yuklab olish boshlandi</span>";
+      }, 900);
+    }
+
+    window.addEventListener("load", startDownload);
+  </script>
+</body>
+</html>
